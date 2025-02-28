@@ -29,6 +29,7 @@ import kotlinx.coroutines.tasks.await
 
 class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
 
+
   override val currentUserId: String
     get() = auth.currentUser?.uid.orEmpty()
 
@@ -58,7 +59,8 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
   }
 
   override suspend fun linkAccount(email: String, password: String) {
-    //TODO
+    val credential = EmailAuthProvider.getCredential(email, password)
+    auth.currentUser!!.linkWithCredential(credential).await()
   }
 
   override suspend fun deleteAccount() {
@@ -79,3 +81,4 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : A
     private const val LINK_ACCOUNT_TRACE = "linkAccount"
   }
 }
+
